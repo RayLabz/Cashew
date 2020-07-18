@@ -11,13 +11,11 @@ public class Cache<K, V> {
 
     private long timeToLive;
     private long cleanupInterval;
-    private final CacheType type;
     private final LRUMap<K, CacheItem<V>> map;
 
     //TODO - Listeners!
 
-    Cache(long timeToLive, long cleanupInterval, CacheType type) {
-        this.type = type;
+    Cache(long timeToLive, long cleanupInterval) {
         this.timeToLive = timeToLive;
         this.map = new LRUMap<>();
         if (timeToLive > 0 && cleanupInterval > 0) {
@@ -38,8 +36,8 @@ public class Cache<K, V> {
         }
     }
 
-    Cache(CacheType type, Class<?> cacheClass) {
-        this(DEFAULT_TIME_TO_LIVE, DEFAULT_CLEANUP_INTERVAL, type);
+    Cache(Class<?> cacheClass) {
+        this(DEFAULT_TIME_TO_LIVE, DEFAULT_CLEANUP_INTERVAL);
     }
 
     public void put(K key, V value) {
@@ -125,10 +123,6 @@ public class Cache<K, V> {
 
     public void setCleanupInterval(long cleanupInterval) {
         this.cleanupInterval = cleanupInterval;
-    }
-
-    public CacheType getType() {
-        return type;
     }
 
 }

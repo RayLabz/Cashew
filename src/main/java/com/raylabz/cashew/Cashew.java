@@ -13,7 +13,7 @@ public final class Cashew {
         }
     }
 
-    public static void registerClass(Class<?> aClass, CacheType cacheType) {
+    public static void registerClass(Class<?> aClass) {
         registerClass(aClass, Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL);
     }
 
