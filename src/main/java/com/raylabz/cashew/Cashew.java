@@ -5,7 +5,7 @@ import java.util.HashMap;
 public final class Cashew {
 
     private static final HashMap<Class<?>, StringCache<?>> caches = new HashMap<>();
-    private static final HashMap<Object, StringCache<Object>> mainCache = new HashMap<>();
+    private static final StringCache<Object> mainCache = new StringCache<>(Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL);
 
     public static void registerClass(Class<?> aClass, long timeToLive, long cleanupInterval) {
         if (!caches.containsKey(aClass)) {
@@ -14,16 +14,12 @@ public final class Cashew {
         }
     }
 
-    static {
-        mainCache.put(Object.class, new StringCache<Object>(Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL));
-    }
-
     public static void registerClass(Class<?> aClass) {
         registerClass(aClass, Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL);
     }
 
     public static StringCache<Object> getMainCache() throws NoCacheException {
-        return mainCache.get(Object.class);
+        return mainCache;
     }
 
     public static <T> StringCache<T> getCache(Class<?> aClass) throws NoCacheException {
