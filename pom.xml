@@ -6,7 +6,7 @@
 
     <groupId>com.raylabz</groupId>
     <artifactId>cashew</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 
     <build>
         <plugins>
@@ -82,7 +82,7 @@
 
     <name>Cashew</name>
     <description>
-        A Java memory caching library.
+        A lightweight caching library in Java.
     </description>
     <url>http://maven.apache.org</url>
 
