@@ -13,6 +13,11 @@ public class NoCacheException extends Exception {
         super("No cache found for class '" + aClass.getSimpleName() + "'. Use Cashew.registerClass() to create a new cache for this class.");
     }
 
+    NoCacheException(final String cacheName) {
+        super("No cache found for name '" + cacheName + "'. Use Cashew.createCache() to create a new cache.");
+    }
+
+
     /**
      * Constructs a NoCacheException.
      */

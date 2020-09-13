@@ -1,6 +1,9 @@
 package com.raylabz.cashew;
 
+import org.apache.commons.collections4.map.LRUMap;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Allows access to the caches using simple commands.
@@ -10,12 +13,17 @@ public final class Cashew {
     /**
      * A map of classes to caches which allows objects to be stored according to their types.
      */
-    private static final HashMap<Class<?>, StringCache<?>> caches = new HashMap<>();
+    private static final HashMap<Class<?>, StringCache<?>> OBJECT_CACHES = new HashMap<>();
+
+    /**
+     * A map of string-named caches.
+     */
+    private static final HashMap<String, StringCache<?>> GENERIC_CACHES = new HashMap<>();
 
     /**
      * The main cache, used for storing any type of object.
      */
-    private static final StringCache<Object> mainCache = new StringCache<>(Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL);
+    private static final StringCache<Object> MAIN_CACHE = new StringCache<>(Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL);
 
     /**
      * Registers a class for use in the object-oriented cache.
@@ -24,9 +32,9 @@ public final class Cashew {
      * @param cleanupInterval The class cache cleanup interval.
      */
     public static void registerClass(Class<?> aClass, long timeToLive, long cleanupInterval) {
-        if (!caches.containsKey(aClass)) {
+        if (!OBJECT_CACHES.containsKey(aClass)) {
             StringCache<?> cache = new StringCache<>(timeToLive, cleanupInterval);
-            caches.put(aClass, cache);
+            OBJECT_CACHES.put(aClass, cache);
         }
     }
 
@@ -39,11 +47,30 @@ public final class Cashew {
     }
 
     /**
+     * Creates a generic cache.
+     * @param cacheName The cache name.
+     * @param timeToLive The cache TTL.
+     * @param cleanupInterval The cleanup interval.
+     */
+    public static void createCache(String cacheName, long timeToLive, long cleanupInterval) {
+        StringCache<?> cache = new StringCache<>(timeToLive, cleanupInterval);
+        GENERIC_CACHES.put(cacheName, cache);
+    }
+
+    /**
+     * Creates a generic cache.
+     * @param cacheName The cache name.
+     */
+    public static void createCache(String cacheName) {
+        createCache(cacheName, Cache.DEFAULT_TIME_TO_LIVE, Cache.DEFAULT_CLEANUP_INTERVAL);
+    }
+
+    /**
      * Retrieves an instance of the main cache.
      * @return Returns the main cache.
      */
     public static StringCache<Object> getMainCache() {
-        return mainCache;
+        return MAIN_CACHE;
     }
 
     /**
@@ -54,11 +81,37 @@ public final class Cashew {
      * @throws NoCacheException Throws an exception when no such cache is registered.
      */
     public static <T> StringCache<T> getCache(Class<?> aClass) throws NoCacheException {
-        final StringCache<T> cache = (StringCache<T>) caches.get(aClass);
+        final StringCache<T> cache = (StringCache<T>) OBJECT_CACHES.get(aClass);
         if (cache != null) {
             return cache;
         } else {
             throw new NoCacheException(aClass);
+        }
+    }
+
+    /**
+     * Retrieves a generic cache.
+     * @param cacheName The cache name.
+     */
+    public static StringCache<String> getCache(String cacheName) throws NoCacheException {
+        final StringCache<String> cache = (StringCache<String>) GENERIC_CACHES.get(cacheName);
+        if (cache != null) {
+            return cache;
+        } else {
+            throw new NoCacheException(cacheName);
+        }
+    }
+
+    /**
+     * Iterates through all items in a cache.
+     * @param cache The cache to iterate through.
+     * @param iterator The iterator.
+     * @param <T> The type of data stored in the cache.
+     */
+    public static <T> void forAll(StringCache<? extends T> cache, CacheIterator iterator) {
+        final LRUMap<String, ? extends CacheItem<? extends T>> map = cache.getMap();
+        for (Map.Entry<String, ? extends CacheItem<? extends T>> entry : map.entrySet()) {
+            iterator.forEach(entry.getKey(), entry.getValue());
         }
     }
 

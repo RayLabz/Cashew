@@ -201,4 +201,12 @@ public class Cache<K, V> {
         this.cleanupInterval = cleanupInterval;
     }
 
+    /**
+     * Retrieves the cache map.
+     * @return Returns an LRUMap.
+     */
+    LRUMap<K, CacheItem<V>> getMap() {
+        return map;
+    }
+
 }

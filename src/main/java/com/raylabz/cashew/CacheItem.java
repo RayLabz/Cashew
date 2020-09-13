@@ -5,7 +5,7 @@ package com.raylabz.cashew;
  * several additional properties.
  * @param <T> The type of the object stored.
  */
-final class CacheItem<T> {
+public final class CacheItem<T> {
 
     /**
      * The time this object was created on.
