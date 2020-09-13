@@ -1,7 +1,9 @@
 package com.raylabz.cashew.tcpserver;
 
 import com.raylabz.cashew.Cashew;
+import com.raylabz.cashew.NoCacheException;
 import com.raylabz.cashew.StringCache;
+import com.raylabz.responz.ErrorResponse;
 import com.raylabz.responz.Response;
 import com.raylabz.servexpresso.InputParams;
 import com.raylabz.servexpresso.ParamType;
@@ -27,11 +29,18 @@ public class API {
 
                     StringCache<?> cache;
 
-                    if (objectClass == null) {
-                        cache = Cashew.getMainCache();
+                    try {
+                        if (objectClass == null) {
+                            cache = Cashew.getMainCache();
+                        } else {
+                            cache = Cashew.getCache(objectClass);
+                        }
+
+                        //TODO ... Proceed with commands...
+
                     }
-                    else {
-                        
+                    catch (NoCacheException e) {
+                        return new ErrorResponse("No cache", "The cache '" + objectClass + "' does not exist.");
                     }
 
                 }
