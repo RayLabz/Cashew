@@ -92,6 +92,8 @@ public final class Cashew {
     /**
      * Retrieves a generic cache.
      * @param cacheName The cache name.
+     * @return Returns a StringCache.
+     * @throws NoCacheException Throws an exception when the cache was not found.
      */
     public static StringCache<String> getCache(String cacheName) throws NoCacheException {
         final StringCache<String> cache = (StringCache<String>) GENERIC_CACHES.get(cacheName);
