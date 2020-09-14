@@ -1,5 +1,5 @@
 import com.raylabz.cashew.Cashew;
-import com.raylabz.cashew.NoCacheException;
+import com.raylabz.cashew.exception.NoCacheException;
 
 public class Example2 {
 

@@ -1,4 +1,4 @@
-package com.raylabz.cashew;
+package com.raylabz.cashew.exception;
 
 /**
  * An exception thrown when there is no cache found (not registered) for a specific class.

@@ -1,9 +1,8 @@
 package com.raylabz.cashew;
 
-import org.apache.commons.collections4.map.LRUMap;
+import com.raylabz.cashew.exception.NoCacheException;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Allows access to the caches using simple commands.
@@ -101,19 +100,6 @@ public final class Cashew {
             return cache;
         } else {
             throw new NoCacheException(cacheName);
-        }
-    }
-
-    /**
-     * Iterates through all items in a cache.
-     * @param cache The cache to iterate through.
-     * @param iterator The iterator.
-     * @param <T> The type of data stored in the cache.
-     */
-    public static <T> void forAll(StringCache<? extends T> cache, CacheIterator iterator) {
-        final LRUMap<String, ? extends CacheItem<? extends T>> map = cache.getMap();
-        for (Map.Entry<String, ? extends CacheItem<? extends T>> entry : map.entrySet()) {
-            iterator.forEach(entry.getKey(), entry.getValue());
         }
     }
 

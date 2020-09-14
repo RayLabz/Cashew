@@ -1,6 +1,6 @@
 import com.raylabz.cashew.Cache;
 import com.raylabz.cashew.Cashew;
-import com.raylabz.cashew.NoCacheException;
+import com.raylabz.cashew.exception.NoCacheException;
 
 import java.util.UUID;
 

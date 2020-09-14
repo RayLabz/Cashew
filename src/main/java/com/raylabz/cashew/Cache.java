@@ -1,8 +1,10 @@
 package com.raylabz.cashew;
 
+import com.raylabz.cashew.iterator.CacheIterator;
 import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.map.LRUMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Models a cache, which can store objects with a specified key type and value type.
@@ -237,6 +239,16 @@ public class Cache<K, V> {
      */
     LRUMap<K, CacheItem<V>> getMap() {
         return map;
+    }
+
+    /**
+     * Iterates through all items in a cache.
+     * @param iterator The iterator.
+     */
+    public void forAll(CacheIterator<K, V> iterator) {
+        for (Map.Entry<K, CacheItem<V>> entry : map.entrySet()) {
+            iterator.forEach(entry.getKey(), entry.getValue());
+        }
     }
 
 }
