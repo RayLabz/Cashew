@@ -27,17 +27,12 @@ public class API {
                         objectClass = params.getString("class");
                     }
 
-                    StringCache<?> cache;
+
 
                     try {
-                        if (objectClass == null) {
-                            cache = Cashew.getMainCache();
-                        } else {
-                            cache = Cashew.getCache(objectClass);
-                        }
-
-                        //TODO ... Proceed with commands...
-
+                        StringCache<String> cache;
+                        cache = Cashew.getCache(objectClass);
+                        cache.put(key, value);
                     }
                     catch (NoCacheException e) {
                         return new ErrorResponse("No cache", "The cache '" + objectClass + "' does not exist.");

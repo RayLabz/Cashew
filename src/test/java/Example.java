@@ -12,7 +12,7 @@ public class Example {
         try {
             final Cache<String, Person> cache = Cashew.getCache(Person.class);
             Person person = new Person("nicos", "kasenides", 27);
-            cache.put(UUID.randomUUID().toString(), person);
+            cache.add(UUID.randomUUID().toString(), person);
 
             while (true) {
                 Thread.sleep(2000);

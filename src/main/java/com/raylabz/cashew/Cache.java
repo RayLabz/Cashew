@@ -75,20 +75,39 @@ public class Cache<K, V> {
     }
 
     /**
-     * Puts (adds) an object into the cache.
+     * Adds an object into the cache, replacing any previous objects with the same key.
      * @param key The object key.
      * @param value The object value.
      */
-    public void put(K key, V value) {
+    public boolean add(K key, V value) {
         synchronized (map) {
-            map.put(key, new CacheItem<>(value));
+            return map.put(key, new CacheItem<>(value)) != null;
+        }
+    }
+
+    /**
+     * Updates an object in the cache with a new value.
+     * @param key The key of the object.
+     * @param newValue The new value of the object.
+     * @return Returns true if the value was updated, false otherwise.
+     */
+    public boolean update(K key, V newValue) {
+        synchronized (map) {
+            CacheItem<V> item = map.get(key);
+            if (item != null) {
+                item.setValue(newValue);
+                item.setLastAccessed(System.currentTimeMillis());
+                item.setUpdatedOn(System.currentTimeMillis());
+                return true;
+            }
+            return false;
         }
     }
 
     /**
      * Retrieves an object from the cache.
      * @param key The key of the object to retrieve.
-     * @return Returns a value.-
+     * @return Returns a value.
      */
     public V get(K key) {
         synchronized (map) {
@@ -124,10 +143,11 @@ public class Cache<K, V> {
     /**
      * Removes an object from the cache.
      * @param key The key of the object to remove.
+     * @return Returns true if the item was deleted, false otherwise.
      */
-    public void remove(K key) {
+    public boolean remove(K key) {
         synchronized (map) {
-            map.remove(key);
+            return map.remove(key) != null;
         }
     }
 

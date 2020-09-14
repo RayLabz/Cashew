@@ -1,7 +1,5 @@
 import com.raylabz.cashew.*;
 
-import java.util.Map;
-
 public class Example3 {
 
     public static void main(String[] args) {
@@ -9,8 +7,8 @@ public class Example3 {
 
         try {
             final StringCache<String> personCache = Cashew.getCache("Person");
-            personCache.put("Nicos", "1234");
-            personCache.put("Panayiota", "4321");
+            personCache.add("Nicos", "1234");
+            personCache.add("Panayiota", "4321");
 
 
             final String nicos = personCache.get("Nicos");
