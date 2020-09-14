@@ -79,6 +79,7 @@ public class Cache<K, V> {
      * Adds an object into the cache, replacing any previous objects with the same key.
      * @param key The object key.
      * @param value The object value.
+     * @return Returns true if the object was added, false otherwise.
      */
     public boolean add(K key, V value) {
         synchronized (map) {

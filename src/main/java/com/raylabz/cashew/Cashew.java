@@ -144,6 +144,7 @@ public final class Cashew {
     /**
      * Backs up a single cache.
      * @throws IOException Throws an IOException when the cache cannot be backed up into a file.
+     * @return Returns the cache's backup filename.
      */
     public static String backupMainCache() throws IOException {
         final Gson GSON = new Gson();
@@ -160,7 +161,11 @@ public final class Cashew {
 
     /**
      * Backs up a cache.
+     * @param cacheName The name of the cache.
+     * @param cache The cache to back up.
+     * @param <V> The value type of the cache.
      * @throws IOException Throws an IOException when the cache cannot be backed up into a file.
+     * @return Returns the filename of the cache's backup.
      */
     public static <V> String backupCache(StringCache<V> cache, String cacheName) throws IOException {
         final Gson GSON = new Gson();
@@ -175,8 +180,8 @@ public final class Cashew {
     }
 
     /**
-     * Sets the backup task interval (must be >=30 seconds).
-     * @param backupTaskInterval The backup task interval, in milliseconds. Must be >=30000 milliseconds (30 seconds).
+     * Sets the backup task interval.
+     * @param backupTaskInterval The backup task interval, in milliseconds. Must be greater than or equal to 30000 milliseconds (30 seconds).
      */
     public static void setBackupTaskInterval(long backupTaskInterval) {
         if (backupTaskInterval >= 30000) {

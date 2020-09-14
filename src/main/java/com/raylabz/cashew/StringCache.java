@@ -32,7 +32,6 @@ public final class StringCache<V> extends Cache<String, V> {
 
     /**
      * Clones this cache into another cache.
-     * @param cache The cache to clone
      * @return Returns a new cache contains the same items as the cloned cache.
      */
     public StringCache<V> copy() {
