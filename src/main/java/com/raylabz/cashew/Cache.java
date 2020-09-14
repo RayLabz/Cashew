@@ -57,7 +57,6 @@ public class Cache<K, V> {
                         Thread.sleep(cleanupInterval);
                     }
                     catch (InterruptedException e) {
-                        System.err.println("Amplify error: " + e.getMessage());
                         e.printStackTrace();
                     }
                     cleanup();

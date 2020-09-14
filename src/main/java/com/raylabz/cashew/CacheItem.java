@@ -1,5 +1,6 @@
 package com.raylabz.cashew;
 
+import com.google.gson.Gson;
 import com.raylabz.cashew.listener.OnItemDeleteListener;
 import com.raylabz.cashew.listener.OnItemUpdateListener;
 
@@ -137,6 +138,16 @@ public final class CacheItem<T> {
      */
     public void setOnItemDeleteListener(OnItemDeleteListener onItemDeleteListener) {
         this.onItemDeleteListener = onItemDeleteListener;
+    }
+
+    /**
+     * Clones an item into a new item.
+     * @return Returns a new CacheItem with the same value as the cloned item.
+     */
+    public CacheItem<T> copy() {
+        final Gson GSON = new Gson();
+        String jsonStr = GSON.toJson(this);
+        return GSON.fromJson(jsonStr, CacheItem.class);
     }
 
 }

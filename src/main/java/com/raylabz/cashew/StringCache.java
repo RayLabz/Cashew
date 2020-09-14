@@ -30,4 +30,19 @@ public final class StringCache<V> extends Cache<String, V> {
         }
     }
 
+    /**
+     * Clones this cache into another cache.
+     * @param cache The cache to clone
+     * @return Returns a new cache contains the same items as the cloned cache.
+     */
+    public StringCache<V> copy() {
+        StringCache<V> newCache = new StringCache<V>(getTimeToLive(), getCleanupInterval());
+        for (Map.Entry<String, CacheItem<V>> entry : getMap().entrySet()) {
+            final String newKey = entry.getKey();
+            final CacheItem<V> newCacheItem = entry.getValue().copy();
+            newCache.getMap().put(newKey, newCacheItem);
+        }
+        return newCache;
+    }
+
 }
