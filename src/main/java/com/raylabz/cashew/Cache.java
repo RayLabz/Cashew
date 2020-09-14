@@ -38,7 +38,7 @@ public class Cache<K, V> {
      */
     private final LRUMap<K, CacheItem<V>> map;
 
-    //TODO - Listeners!
+    //TODO - Background backup into files
 
     /**
      * Constructs a cache.
@@ -98,6 +98,9 @@ public class Cache<K, V> {
                 item.setValue(newValue);
                 item.setLastAccessed(System.currentTimeMillis());
                 item.setUpdatedOn(System.currentTimeMillis());
+                if (item.getOnItemUpdateListener() != null) {
+                    item.getOnItemUpdateListener().onUpdate(item);
+                }
                 return true;
             }
             return false;
@@ -141,13 +144,20 @@ public class Cache<K, V> {
     }
 
     /**
-     * Removes an object from the cache.
+     * Deletes an object from the cache.
      * @param key The key of the object to remove.
      * @return Returns true if the item was deleted, false otherwise.
      */
-    public boolean remove(K key) {
+    public boolean delete(K key) {
         synchronized (map) {
-            return map.remove(key) != null;
+            final CacheItem<V> removedItem = map.remove(key);
+            if (removedItem != null) {
+                if (removedItem.getOnItemDeleteListener() != null) {
+                    removedItem.getOnItemDeleteListener().onDelete(removedItem);
+                }
+                return true;
+            }
+            return false;
         }
     }
 
@@ -184,7 +194,7 @@ public class Cache<K, V> {
         }
 
         for (K key : keysToDelete) {
-            remove(key);
+            delete(key);
             Thread.yield();
         }
     }

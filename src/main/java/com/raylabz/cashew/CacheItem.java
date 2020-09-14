@@ -1,5 +1,8 @@
 package com.raylabz.cashew;
 
+import com.raylabz.cashew.listener.OnItemDeleteListener;
+import com.raylabz.cashew.listener.OnItemUpdateListener;
+
 /**
  * Models an item that can exist in the cache. This object type behaves as a wrapper around stored objects, giving them
  * several additional properties.
@@ -26,6 +29,16 @@ public final class CacheItem<T> {
      * The object.
      */
     private T value;
+
+    /**
+     * The item's OnItemUpdateListener.
+     */
+    private OnItemUpdateListener onItemUpdateListener = null;
+
+    /**
+     * The item's OnItemDeleteListener.
+     */
+    private OnItemDeleteListener onItemDeleteListener = null;
 
     /**
      * Constructs a CacheItem.
@@ -92,6 +105,38 @@ public final class CacheItem<T> {
      */
     public void setValue(T value) {
         this.value = value;
+    }
+
+    /**
+     * Retrieves the item's OnItemUpdateListener.
+     * @return Returns an OnItemUpdateListener.
+     */
+    public OnItemUpdateListener getOnItemUpdateListener() {
+        return onItemUpdateListener;
+    }
+
+    /**
+     * Sets the item's OnItemUpdateListener.
+     * @param onItemUpdateListener The listener to set.
+     */
+    public void setOnItemUpdateListener(OnItemUpdateListener onItemUpdateListener) {
+        this.onItemUpdateListener = onItemUpdateListener;
+    }
+
+    /**
+     * Retrieves the item's OnItemDeleteListener.
+     * @return Returns an OnItemDeleteListener.
+     */
+    public OnItemDeleteListener getOnItemDeleteListener() {
+        return onItemDeleteListener;
+    }
+
+    /**
+     * Sets the item's OnItemDeleteListener.
+     * @param onItemDeleteListener The listener to set.
+     */
+    public void setOnItemDeleteListener(OnItemDeleteListener onItemDeleteListener) {
+        this.onItemDeleteListener = onItemDeleteListener;
     }
 
 }

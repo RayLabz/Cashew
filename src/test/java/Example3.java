@@ -1,4 +1,6 @@
 import com.raylabz.cashew.*;
+import com.raylabz.cashew.listener.OnItemDeleteListener;
+import com.raylabz.cashew.listener.OnItemUpdateListener;
 
 public class Example3 {
 
@@ -24,8 +26,31 @@ public class Example3 {
                 }
             });
 
+            final CacheItem<String> nicosCacheItem = personCache.getAsCacheItem("Nicos");
+            nicosCacheItem.setOnItemUpdateListener(new OnItemUpdateListener() {
+                @Override
+                public void onUpdate(CacheItem<?> item) {
+                    System.out.println("The item with key 'Nicos' was updated: " + item.getValue() + "-- updated on: " + item.getUpdatedOn());
+                }
+            });
 
-        } catch (NoCacheException e) {
+            nicosCacheItem.setOnItemDeleteListener(new OnItemDeleteListener() {
+                @Override
+                public void onDelete(CacheItem<?> item) {
+                    System.out.println("Item with key 'Nicos' was deleted : " + item.getValue());
+                }
+            });
+
+            personCache.update("Nicos", "x123x");
+
+            Thread.sleep(1000);
+
+            personCache.delete("Nicos");
+
+            System.out.println(personCache.size());
+
+
+        } catch (NoCacheException | InterruptedException e) {
             e.printStackTrace();
         }
 
