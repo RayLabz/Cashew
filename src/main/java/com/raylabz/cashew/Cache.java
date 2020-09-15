@@ -79,11 +79,11 @@ public class Cache<K, V> {
      * Adds an object into the cache, replacing any previous objects with the same key.
      * @param key The object key.
      * @param value The object value.
-     * @return Returns true if the object was added, false otherwise.
+     * @return Returns the old value being replaced by this method, null otherwise.
      */
-    public boolean add(K key, V value) {
+    public CacheItem<V> add(K key, V value) {
         synchronized (map) {
-            return map.put(key, new CacheItem<>(value)) != null;
+            return map.put(key, new CacheItem<>(value));
         }
     }
 
@@ -91,9 +91,8 @@ public class Cache<K, V> {
      * Updates an object in the cache with a new value.
      * @param key The key of the object.
      * @param newValue The new value of the object.
-     * @return Returns true if the value was updated, false otherwise.
      */
-    public boolean update(K key, V newValue) {
+    public void update(K key, V newValue) {
         synchronized (map) {
             CacheItem<V> item = map.get(key);
             if (item != null) {
@@ -103,9 +102,7 @@ public class Cache<K, V> {
                 if (item.getOnItemUpdateListener() != null) {
                     item.getOnItemUpdateListener().onUpdate(item);
                 }
-                return true;
             }
-            return false;
         }
     }
 
@@ -148,18 +145,15 @@ public class Cache<K, V> {
     /**
      * Deletes an object from the cache.
      * @param key The key of the object to remove.
-     * @return Returns true if the item was deleted, false otherwise.
      */
-    public boolean delete(K key) {
+    public void delete(K key) {
         synchronized (map) {
             final CacheItem<V> removedItem = map.remove(key);
             if (removedItem != null) {
                 if (removedItem.getOnItemDeleteListener() != null) {
                     removedItem.getOnItemDeleteListener().onDelete(removedItem);
                 }
-                return true;
             }
-            return false;
         }
     }
 
