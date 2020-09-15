@@ -1,6 +1,7 @@
 package com.raylabz.cashew.tcpserver.server;
 
 import com.google.gson.*;
+import com.raylabz.cashew.Cache;
 import com.raylabz.cashew.CacheItem;
 import com.raylabz.cashew.Cashew;
 import com.raylabz.cashew.StringCache;
@@ -16,6 +17,29 @@ import com.raylabz.servexpresso.Serviceable;
 import com.sun.net.httpserver.Authenticator;
 
 public class API {
+
+    public static final Service CREATE_CACHE_SERVICE = new Service.Builder()
+            .expectParam("objectClass", ParamType.STRING, true)
+            .expectParam("timeToLive", ParamType.LONG, false)
+            .expectParam("cleanupInterval", ParamType.LONG, false)
+            .implement(new Serviceable() {
+                @Override
+                public Response serve(InputParams params) {
+
+                    final String objectClass = params.getString("objectClass");
+                    try {
+                        StringCache<String> cache = Cashew.getCache(objectClass);
+                        return new ErrorResponse("Cache exists", "A cache for this class already exists.");
+                    } catch (NoCacheException e) {
+                        long ttl = Cashew
+                        long interval;
+                        if ()
+                        Cashew.createCache()
+                    }
+
+                }
+            })
+            .build();
 
     public static final Service ADD_SERVICE = new Service.Builder()
             .expectParam("key", ParamType.STRING, true)

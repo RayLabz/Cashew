@@ -22,23 +22,39 @@ public class TestClient extends CashewTCPClient {
 
     @Override
     public void initialize() {
-        Person person = new Person("Nicos", "Kasenides");
-        final JsonElement jsonElement = new Gson().toJsonTree(person);
-        AddRequest addRequest = new AddRequest("key1", new Gson().toJson(jsonElement), null);
-        String sending = new Gson().toJson(addRequest);
-        System.out.println("Sending: " + sending);
-        send(sending);
 
         try {
+
+            Person person = new Person("Nicos", "Kasenides");
+            doAddRequest("person1", person, Person.class);
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
+
+            doGetRequest("person1", Person.class);
+            Thread.sleep(1000);
+
+            doAddRequest("myNumber", 3, null);
+            Thread.sleep(1000);
+
+            doGetRequest("myNumber", null);
+            Thread.sleep(1000);
+
+            Person person2 = new Person("Panayiota", "Michaelides");
+            doAddRequest("person2", person2, Person.class);
+            Thread.sleep(1000);
+
+            doListRequest(Person.class);
+            Thread.sleep(1000);
+
+            doDeleteRequest("person1", Person.class);
+            Thread.sleep(1000);
+
+            stop();
+
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
-        GetRequest getRequest = new GetRequest("key1", null);
-        sending = new Gson().toJson(getRequest);
-        System.out.println("Sending: " + sending);
-        send(sending);
 
     }
 

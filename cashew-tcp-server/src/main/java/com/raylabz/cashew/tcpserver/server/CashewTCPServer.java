@@ -55,39 +55,37 @@ public class CashewTCPServer extends Server {
                             tcpConnection.send(errorResponse.toJSON());
                         }
                         break;
-//                    case DELETE:
-//                        try {
-//                            final DeleteRequest deleteRequest = (DeleteRequest) request;
-//                            final InputParams params = new InputParams();
-//                            params.put("key", new InputParam("key", deleteRequest.getKey()));
-//                            params.put("objectClass", new InputParam("objectClass", deleteRequest.getObjectClass()));
-//                            final Response response = deleteRequest.getService().getService().processRequest(params);
-//                            tcpConnection.send(response.toJSON());
-//                        } catch (JsonParseException addException) {
-//                            final ErrorResponse errorResponse = new ErrorResponse(
-//                                    "Command error",
-//                                    "Could not parse DELETE request. Provide the following parameters as JSON object: key (String), objectClass (String)."
-//                            );
-//                            tcpConnection.send(errorResponse.toJSON());
-//                        }
-//                        break;
-//                    case UPDATE:
-//                        try {
-//                            final UpdateRequest updateRequest = (UpdateRequest) request;
-//                            final InputParams params = new InputParams();
-//                            params.put("key", new InputParam("key", updateRequest.getKey()));
-//                            params.put("value", new InputParam("value", updateRequest.getValue()));
-//                            params.put("objectClass", new InputParam("objectClass", updateRequest.getObjectClass()));
-//                            final Response response = updateRequest.getService().getService().processRequest(params);
-//                            tcpConnection.send(response.toJSON());
-//                        } catch (JsonParseException addException) {
-//                            final ErrorResponse errorResponse = new ErrorResponse(
-//                                    "Command error",
-//                                    "Could not parse UDPATE request. Provide the following parameters as JSON object: key (String), value (String), objectClass (String)."
-//                            );
-//                            tcpConnection.send(errorResponse.toJSON());
-//                        }
-//                        break;
+                    case "DELETE":
+                        try {
+                            final InputParams params = new InputParams();
+                            params.put("key", new InputParam("key", request.get("key").getAsString()));
+                            params.put("objectClass", new InputParam("objectClass", request.get("objectClass").getAsString()));
+                            final Response response = ServiceType.DELETE.getService().processRequest(params);
+                            tcpConnection.send(response.toJSON());
+                        } catch (JsonParseException addException) {
+                            final ErrorResponse errorResponse = new ErrorResponse(
+                                    "Command error",
+                                    "Could not parse DELETE request. Provide the following parameters as JSON object: key (String), objectClass (String)."
+                            );
+                            tcpConnection.send(errorResponse.toJSON());
+                        }
+                        break;
+                    case "UPDATE":
+                        try {
+                            final InputParams params = new InputParams();
+                            params.put("key", new InputParam("key", request.get("key").getAsString()));
+                            params.put("value", new InputParam("value", request.get("value").getAsString()));
+                            params.put("objectClass", new InputParam("objectClass", request.get("objectClass").getAsString()));
+                            final Response response = ServiceType.UPDATE.getService().processRequest(params);
+                            tcpConnection.send(response.toJSON());
+                        } catch (JsonParseException addException) {
+                            final ErrorResponse errorResponse = new ErrorResponse(
+                                    "Command error",
+                                    "Could not parse UDPATE request. Provide the following parameters as JSON object: key (String), value (String), objectClass (String)."
+                            );
+                            tcpConnection.send(errorResponse.toJSON());
+                        }
+                        break;
                     case "GET":
                         try {
                             final InputParams params = new InputParams();
@@ -105,21 +103,20 @@ public class CashewTCPServer extends Server {
                             tcpConnection.send(errorResponse.toJSON());
                         }
                         break;
-//                    case LIST:
-//                        try {
-//                            final ListRequest listRequest = (ListRequest) request;
-//                            final InputParams params = new InputParams();
-//                            params.put("objectClass", new InputParam("objectClass", listRequest.getObjectClass()));
-//                            final Response response = listRequest.getService().getService().processRequest(params);
-//                            tcpConnection.send(response.toJSON());
-//                        } catch (JsonParseException addException) {
-//                            final ErrorResponse errorResponse = new ErrorResponse(
-//                                    "Command error",
-//                                    "Could not parse LIST request. Provide the following parameters as JSON object: objectClass (String)."
-//                            );
-//                            tcpConnection.send(errorResponse.toJSON());
-//                        }
-//                        break;
+                    case "LIST":
+                        try {
+                            final InputParams params = new InputParams();
+                            params.put("objectClass", new InputParam("objectClass", request.get("objectClass").getAsString()));
+                            final Response response = ServiceType.LIST.getService().processRequest(params);
+                            tcpConnection.send(response.toJSON());
+                        } catch (JsonParseException addException) {
+                            final ErrorResponse errorResponse = new ErrorResponse(
+                                    "Command error",
+                                    "Could not parse LIST request. Provide the following parameters as JSON object: objectClass (String)."
+                            );
+                            tcpConnection.send(errorResponse.toJSON());
+                        }
+                        break;
                 }
 
             }

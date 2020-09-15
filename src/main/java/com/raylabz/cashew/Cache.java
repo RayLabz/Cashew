@@ -17,13 +17,13 @@ public class Cache<K, V> {
      * The default time for objects to be kept in the cache without being deleted.
      * 1 week.
      */
-    static final long DEFAULT_TIME_TO_LIVE = 7 * 24 * 60 * 60 * 1000L;
+    public static final long DEFAULT_TIME_TO_LIVE = 7 * 24 * 60 * 60 * 1000L;
 
     /**
      * The default time interval for running cleanup operations.
      * 1 hour.
      */
-    static final long DEFAULT_CLEANUP_INTERVAL = 60 * 60 * 1000L; //1 hour
+    public static final long DEFAULT_CLEANUP_INTERVAL = 60 * 60 * 1000L; //1 hour
 
     /**
      * The time for objects to be kept in the cache without being deleted.
