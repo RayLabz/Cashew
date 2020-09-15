@@ -2,11 +2,9 @@ package com.raylabz.cashew.tcpserver.server;
 
 import com.google.gson.*;
 import com.raylabz.cashew.Cache;
-import com.raylabz.cashew.CacheItem;
 import com.raylabz.cashew.Cashew;
 import com.raylabz.cashew.StringCache;
 import com.raylabz.cashew.exception.NoCacheException;
-import com.raylabz.cashew.iterator.CacheIterator;
 import com.raylabz.responz.ErrorResponse;
 import com.raylabz.responz.Response;
 import com.raylabz.responz.SuccessResponse;
@@ -14,7 +12,6 @@ import com.raylabz.servexpresso.InputParams;
 import com.raylabz.servexpresso.ParamType;
 import com.raylabz.servexpresso.Service;
 import com.raylabz.servexpresso.Serviceable;
-import com.sun.net.httpserver.Authenticator;
 
 public class API {
 
@@ -28,13 +25,19 @@ public class API {
 
                     final String objectClass = params.getString("objectClass");
                     try {
-                        StringCache<String> cache = Cashew.getCache(objectClass);
+                        Cashew.getCache(objectClass);
                         return new ErrorResponse("Cache exists", "A cache for this class already exists.");
                     } catch (NoCacheException e) {
-                        long ttl = Cashew
-                        long interval;
-                        if ()
-                        Cashew.createCache()
+                        long ttl = Cache.DEFAULT_TIME_TO_LIVE;
+                        long interval = Cache.DEFAULT_CLEANUP_INTERVAL;
+                        if (params.paramExists("timeToLive")) {
+                            ttl = params.getLong("timeToLive");
+                        }
+                        if (params.paramExists("cleanupInterval")) {
+                            interval = params.getLong("cleanupInterval");
+                        }
+                        Cashew.createCache(objectClass, ttl, interval);
+                        return new SuccessResponse("Cache created", "Cache '" + objectClass + "' created.");
                     }
 
                 }
@@ -199,23 +202,37 @@ public class API {
                         StringCache<String> cache = Cashew.getCache(objectClass);
 
                         final JsonArray jsonArray = new JsonArray(cache.size());
+                        final Gson gson = new Gson();
 
                         cache.forAll((key, item) -> {
-                            final class InterimArrayItem {
-                                public String key;
-                                public CacheItem<String> value;
+
+                            JsonElement valueElement = null;
+                            try {
+                                valueElement = new Gson().fromJson(item.getValue(), JsonObject.class);
+                            } catch (JsonSyntaxException e) {
+                                try {
+                                    valueElement = new Gson().fromJson(item.getValue(), JsonPrimitive.class);
+                                } catch (JsonSyntaxException jsonSyntaxException) {
+                                    jsonSyntaxException.printStackTrace();
+                                }
                             }
-                            InterimArrayItem arrayItem = new InterimArrayItem();
-                            arrayItem.key = key;
-                            arrayItem.value = item;
-                            JsonElement jsonElement = new Gson().toJsonTree(arrayItem);
-                            jsonArray.add(jsonElement);
+
+                            if (valueElement != null) {
+                                JsonObject entireObject = new JsonObject();
+                                entireObject.addProperty("key", key);
+                                JsonObject itemObject = new JsonObject();
+                                itemObject.add("value", valueElement);
+                                itemObject.addProperty("createdOn", item.getCreatedOn());
+                                itemObject.addProperty("updatedOn", item.getUpdatedOn());
+                                itemObject.addProperty("lastAccessed", item.getLastAccessed());
+                                entireObject.add("item", itemObject);
+                                jsonArray.add(entireObject);
+                            }
                         });
 
                         JsonObject data = new JsonObject();
                         data.addProperty("class", objectClass);
                         data.add("items", jsonArray);
-
                         return new SuccessResponse("Items listed", "Items listed for class '" + objectClass + "'.", data);
 
                     } catch (NoCacheException e) {

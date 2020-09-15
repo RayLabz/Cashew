@@ -5,6 +5,7 @@ import com.raylabz.servexpresso.Service;
 
 public enum ServiceType {
 
+    CREATE_CACHE("CREATE_CACHE", API.CREATE_CACHE_SERVICE),
     ADD("ADD", API.ADD_SERVICE),
     DELETE("DELETE", API.DELETE_SERVICE),
     UPDATE("UPDATE", API.UPDATE_SERVICE),

@@ -23,30 +23,35 @@ public class TestClient extends CashewTCPClient {
     @Override
     public void initialize() {
 
+        long DELAY = 1000;
+
         try {
+
+            doCreateCacheRequest(Person.class);
+            Thread.sleep(DELAY);
 
             Person person = new Person("Nicos", "Kasenides");
             doAddRequest("person1", person, Person.class);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             doGetRequest("person1", Person.class);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             doAddRequest("myNumber", 3, null);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             doGetRequest("myNumber", null);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             Person person2 = new Person("Panayiota", "Michaelides");
             doAddRequest("person2", person2, Person.class);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             doListRequest(Person.class);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             doDeleteRequest("person1", Person.class);
-            Thread.sleep(1000);
+            Thread.sleep(DELAY);
 
             stop();
 

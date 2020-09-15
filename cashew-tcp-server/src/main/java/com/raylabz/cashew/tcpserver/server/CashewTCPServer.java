@@ -37,6 +37,26 @@ public class CashewTCPServer extends Server {
                 JsonObject request = gson.fromJson(data, JsonObject.class);
 
                 switch (request.get("service").getAsString()) {
+                    case "CREATE_CACHE":
+                        try {
+                            final InputParams params = new InputParams();
+                            params.put("objectClass", new InputParam("objectClass", request.get("objectClass").getAsString()));
+                            if (request.has("timeToLive")) {
+                                params.put("timeToLive", new InputParam("timeToLive", request.get("timeToLive").getAsLong()));
+                            }
+                            if (request.has("cleanupInterval")) {
+                                params.put("cleanupInterval", new InputParam("cleanupInterval", request.get("cleanupInterval").getAsLong()));
+                            }
+                            final Response response = ServiceType.CREATE_CACHE.getService().processRequest(params);
+                            tcpConnection.send(response.toJSON());
+                        } catch (JsonParseException addException) {
+                            final ErrorResponse errorResponse = new ErrorResponse(
+                                    "Command error",
+                                    "Could not parse CREATE_CACHE request. Provide the following parameters as JSON object: cache name class (String), timeToLive (long:optional), cleanupInterval (long:optional)."
+                            );
+                            tcpConnection.send(errorResponse.toJSON());
+                        }
+                        break;
                     case "ADD":
                         try {
                             final InputParams params = new InputParams();
