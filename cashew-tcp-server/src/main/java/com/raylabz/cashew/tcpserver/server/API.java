@@ -1,9 +1,6 @@
 package com.raylabz.cashew.tcpserver.server;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.raylabz.cashew.CacheItem;
 import com.raylabz.cashew.Cashew;
 import com.raylabz.cashew.StringCache;
@@ -34,24 +31,16 @@ public class API {
                         final String objectClass = params.getString("objectClass");
                         try {
                             StringCache<String> cache = Cashew.getCache(objectClass);
-                            if (cache.add(key, value)) {
-                                return new SuccessResponse("Value added", "The value has been added.");
-                            }
-                            else {
-                                return new ErrorResponse("Failed", "Could not add value.");
-                            }
+                            cache.add(key, value);
+                            return new SuccessResponse("Value added", "The value has been added.");
                         } catch (NoCacheException e) {
                             return new ErrorResponse("No cache", "The cache '" + objectClass + "' does not exist.");
                         }
                     }
                     else {
                         StringCache<Object> cache = Cashew.getMainCache();
-                        if (cache.add(key, value)) {
-                            return new SuccessResponse("Value added", "The value has been added.");
-                        }
-                        else {
-                            return new ErrorResponse("Failed", "Could not add value.");
-                        }
+                        cache.add(key, value);
+                        return new SuccessResponse("Value added", "The value has been added.");
                     }
                 }
             })
@@ -69,24 +58,16 @@ public class API {
                         final String objectClass = params.getString("objectClass");
                         try {
                             StringCache<String> cache = Cashew.getCache(objectClass);
-                            if (cache.delete(key)) {
-                                return new SuccessResponse("Value deleted", "The value has been deleted.");
-                            }
-                            else {
-                                return new ErrorResponse("Failed", "Could not delete value.");
-                            }
+                            cache.delete(key);
+                            return new SuccessResponse("Value deleted", "The value has been deleted.");
                         } catch (NoCacheException e) {
                             return new ErrorResponse("No cache", "The cache '" + objectClass + "' does not exist.");
                         }
                     }
                     else {
                         StringCache<Object> cache = Cashew.getMainCache();
-                        if (cache.delete(key)) {
-                            return new SuccessResponse("Value deleted", "The value has been deleted.");
-                        }
-                        else {
-                            return new ErrorResponse("Failed", "Could not delete value.");
-                        }
+                        cache.delete(key);
+                        return new SuccessResponse("Value deleted", "The value has been deleted.");
                     }
 
                 }
@@ -107,24 +88,16 @@ public class API {
                         final String objectClass = params.getString("objectClass");
                         try {
                             StringCache<String> cache = Cashew.getCache(objectClass);
-                            if (cache.update(key, value)) {
-                                return new SuccessResponse("Value updated", "The value has been updated.");
-                            }
-                            else {
-                                return new ErrorResponse("Failed", "Could not update value.");
-                            }
+                            cache.update(key, value);
+                            return new SuccessResponse("Value updated", "The value has been updated.");
                         } catch (NoCacheException e) {
                             return new ErrorResponse("No cache", "The cache '" + objectClass + "' does not exist.");
                         }
                     }
                     else {
                         StringCache<Object> cache = Cashew.getMainCache();
-                        if (cache.update(key, value)) {
-                            return new SuccessResponse("Value updated", "The value has been updated.");
-                        }
-                        else {
-                            return new ErrorResponse("Failed", "Could not update value.");
-                        }
+                        cache.update(key, value);
+                        return new SuccessResponse("Value updated", "The value has been updated.");
                     }
 
                 }
@@ -162,10 +135,25 @@ public class API {
                         final Object value = cache.get(key);
                         if (value != null) {
                             System.out.println("value: " + value);
-                            JsonElement valueElement = new Gson().fromJson(value.toString(), JsonObject.class);
-                            JsonObject data = new JsonObject();
-                            data.add("value", valueElement);
-                            return new SuccessResponse("Value fetched", "The value was fetched", data);
+                            JsonElement valueElement = null;
+                            try {
+                                valueElement = new Gson().fromJson(value.toString(), JsonObject.class);
+                            } catch (JsonSyntaxException e) {
+                                try {
+                                    valueElement = new Gson().fromJson(value.toString(), JsonPrimitive.class);
+                                } catch (JsonSyntaxException jsonSyntaxException) {
+                                    jsonSyntaxException.printStackTrace();
+                                }
+                            }
+
+                            if (valueElement != null) {
+                                JsonObject data = new JsonObject();
+                                data.add("value", valueElement);
+                                return new SuccessResponse("Value fetched", "The value was fetched", data);
+                            }
+                            else {
+                                return new ErrorResponse("Failed", "Could not fetch value. Invalid data type.");
+                            }
                         }
                         else {
                             return new ErrorResponse("Failed", "Could not fetch value.");
