@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.raylabz.cashew.tcpserver.ServiceType;
-import com.raylabz.cashew.tcpserver.server.request.*;
 import com.raylabz.mocha.server.Server;
 import com.raylabz.mocha.server.TCPHandler;
 import com.raylabz.responz.ErrorResponse;
@@ -12,13 +11,18 @@ import com.raylabz.responz.Response;
 import com.raylabz.servexpresso.InputParam;
 import com.raylabz.servexpresso.InputParams;
 
+/**
+ * Implements server functionality, serving the Cashew caches.
+ */
 public class CashewTCPServer extends Server {
 
+    /**
+     * The Cashew server port.
+     */
     public static final int PORT = 50000;
 
     /**
      * Constructs a new server.
-     *
      */
     public CashewTCPServer() {
         super("Cashew Server");

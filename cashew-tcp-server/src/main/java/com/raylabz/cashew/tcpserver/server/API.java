@@ -13,8 +13,14 @@ import com.raylabz.servexpresso.ParamType;
 import com.raylabz.servexpresso.Service;
 import com.raylabz.servexpresso.Serviceable;
 
+/**
+ * Models services.
+ */
 public class API {
 
+    /**
+     * Creates a new cache.
+     */
     public static final Service CREATE_CACHE_SERVICE = new Service.Builder()
             .expectParam("objectClass", ParamType.STRING, true)
             .expectParam("timeToLive", ParamType.LONG, false)
@@ -44,6 +50,9 @@ public class API {
             })
             .build();
 
+    /**
+     * Adds a new item in a specified cache.
+     */
     public static final Service ADD_SERVICE = new Service.Builder()
             .expectParam("key", ParamType.STRING, true)
             .expectParam("value", ParamType.STRING, true)
@@ -73,6 +82,9 @@ public class API {
             })
             .build();
 
+    /**
+     * Delets an item from a cache.
+     */
     public static final Service DELETE_SERVICE = new Service.Builder()
             .expectParam("key", ParamType.STRING, true)
             .expectParam("objectClass", ParamType.STRING, false)
@@ -101,6 +113,9 @@ public class API {
             })
             .build();
 
+    /**
+     * Updates an item in a cache.
+     */
     public static final Service UPDATE_SERVICE = new Service.Builder()
             .expectParam("key", ParamType.STRING, true)
             .expectParam("value", ParamType.STRING, true)
@@ -131,6 +146,9 @@ public class API {
             })
             .build();
 
+    /**
+     * Retrieves an item from a cache.
+     */
     public static final Service GET_SERVICE = new Service.Builder()
             .expectParam("key", ParamType.STRING, true)
             .expectParam("objectClass", ParamType.STRING, false)
@@ -191,6 +209,9 @@ public class API {
             })
             .build();
 
+    /**
+     * Lists all items inside a given cache.
+     */
     public static final Service LIST_SERVICE = new Service.Builder()
             .expectParam("objectClass", ParamType.STRING, true)
             .implement(new Serviceable() {
