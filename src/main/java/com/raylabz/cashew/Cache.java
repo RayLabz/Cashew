@@ -3,11 +3,13 @@ package com.raylabz.cashew;
 import com.raylabz.cashew.iterator.CacheIterator;
 import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.map.LRUMap;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Models a cache, which can store objects with a specified key type and value type.
+ *
  * @param <K> The key type of the cache.
  * @param <V> The value type of the cache.
  */
@@ -40,35 +42,34 @@ public class Cache<K, V> {
      */
     private final LRUMap<K, CacheItem<V>> map;
 
-    //TODO - Background backup into files
-
     /**
      * Constructs a cache.
-     * @param timeToLive The cache's default TTL.
+     *
+     * @param timeToLive      The cache's default TTL.
      * @param cleanupInterval The cache's cleanup interval.
      */
     Cache(long timeToLive, long cleanupInterval) {
         this.timeToLive = timeToLive;
         this.map = new LRUMap<>();
-        if (timeToLive > 0 && cleanupInterval > 0) {
-            Thread cleanupThread = new Thread(() -> {
-                while (true) {
+        Thread cleanupThread = new Thread(() -> {
+            while (true) {
+                if (cleanupInterval > 0) {
                     try {
                         Thread.sleep(cleanupInterval);
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    cleanup();
                 }
-            });
-            cleanupThread.setDaemon(true);
-            cleanupThread.start();
-        }
+                cleanup();
+            }
+        });
+        cleanupThread.setDaemon(true);
+        cleanupThread.start();
     }
 
     /**
      * Constucts a cache.
+     *
      * @param cacheClass The cache class.
      */
     Cache(Class<?> cacheClass) {
@@ -77,7 +78,8 @@ public class Cache<K, V> {
 
     /**
      * Adds an object into the cache, replacing any previous objects with the same key.
-     * @param key The object key.
+     *
+     * @param key   The object key.
      * @param value The object value.
      * @return Returns the old value being replaced by this method, null otherwise.
      */
@@ -89,7 +91,8 @@ public class Cache<K, V> {
 
     /**
      * Updates an object in the cache with a new value.
-     * @param key The key of the object.
+     *
+     * @param key      The key of the object.
      * @param newValue The new value of the object.
      */
     public void update(K key, V newValue) {
@@ -108,6 +111,7 @@ public class Cache<K, V> {
 
     /**
      * Retrieves an object from the cache.
+     *
      * @param key The key of the object to retrieve.
      * @return Returns a value.
      */
@@ -116,8 +120,7 @@ public class Cache<K, V> {
             CacheItem<V> item = map.get(key);
             if (item == null) {
                 return null;
-            }
-            else {
+            } else {
                 item.setLastAccessed(System.currentTimeMillis());
                 return item.getValue();
             }
@@ -126,6 +129,7 @@ public class Cache<K, V> {
 
     /**
      * Retrieves an object from the cache as a CacheItem.
+     *
      * @param key The key of the object to retrieve.
      * @return Returns a CacheItem.
      */
@@ -134,8 +138,7 @@ public class Cache<K, V> {
             CacheItem<V> item = map.get(key);
             if (item == null) {
                 return null;
-            }
-            else {
+            } else {
                 item.setLastAccessed(System.currentTimeMillis());
                 return item;
             }
@@ -144,6 +147,7 @@ public class Cache<K, V> {
 
     /**
      * Deletes an object from the cache.
+     *
      * @param key The key of the object to remove.
      */
     public void delete(K key) {
@@ -159,6 +163,7 @@ public class Cache<K, V> {
 
     /**
      * Retrieves the size of the cache (number of objects added to the cache).
+     *
      * @return Returns an integer.
      */
     public int size() {
@@ -197,6 +202,7 @@ public class Cache<K, V> {
 
     /**
      * Retrieves the time to live (TTL) of this cache.
+     *
      * @return Returns a long.
      */
     public long getTimeToLive() {
@@ -205,6 +211,7 @@ public class Cache<K, V> {
 
     /**
      * Sets the time to live (TTL) of this cache.
+     *
      * @param timeToLive The TTL to set.
      */
     public void setTimeToLive(long timeToLive) {
@@ -213,6 +220,7 @@ public class Cache<K, V> {
 
     /**
      * Retrieves the cleanup interval time of this cache.
+     *
      * @return Returns a long.
      */
     public long getCleanupInterval() {
@@ -221,6 +229,7 @@ public class Cache<K, V> {
 
     /**
      * Sets the cleanup interval time of this cache.
+     *
      * @param cleanupInterval The cleanup interval to set.
      */
     public void setCleanupInterval(long cleanupInterval) {
@@ -229,6 +238,7 @@ public class Cache<K, V> {
 
     /**
      * Retrieves the cache map.
+     *
      * @return Returns an LRUMap.
      */
     LRUMap<K, CacheItem<V>> getMap() {
@@ -237,6 +247,7 @@ public class Cache<K, V> {
 
     /**
      * Iterates through all items in a cache.
+     *
      * @param iterator The iterator.
      */
     public void forAll(CacheIterator<K, V> iterator) {
